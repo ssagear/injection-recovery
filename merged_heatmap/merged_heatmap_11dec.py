@@ -19,7 +19,7 @@ rprs_segments = [x / 20 for x in range(8)]
 block_percent = [[0 for i in range(len(per_segments))] for j in range(len(rprs_segments))]
 
 
-with open('/Users/sheilasagear/Dropbox/K2/heatmap_inclination_csv/heatmaps_inprogress/inclination/heatmaps.txt') as f:
+with open('/Users/sheilasagear/Dropbox/K2/heatmap_inclination_csv/from_scc/heatmap_scc.txt') as f:
     content = f.readlines()
     content = [x.strip() for x in content]
     for x in content:
@@ -47,7 +47,7 @@ block_percent = np.asarray(block_percent)
 print(np.mean(block_percent))
 print(block_percent)
 
-np.savetxt('/Users/sheilasagear/Dropbox/K2/surfacetest/pnull/block_percent/pnull_blockpercent.csv', block_percent, fmt='%f', delimiter=',')
+np.savetxt('/Users/sheilasagear/Dropbox/K2/surfacetest/pnull/block_percent/pnull_blockpercent_temp.csv', block_percent, fmt='%f', delimiter=',')
 
 
 block_percent = np.flip(block_percent, axis=0)
@@ -90,7 +90,7 @@ def show_values(fig, ax, pc, fmt="%.2f", **kw):
 
 show_values(fig, ax, heatmap)
 
-plt.savefig('/Users/sheilasagear/Dropbox/ssagear_k2/plots/merged_heatmap_1_with_vals.png', dpi = 400)
+plt.savefig('/Users/sheilasagear/Dropbox/ssagear_k2/plots/merged_heatmap_1_with_vals_temp.png', dpi = 400)
 
 
 plt.show()
