@@ -106,7 +106,7 @@ def createT(time, T0):#time array, transit mid-time, impact parameter
 
     i = randomInc(1)
     impact = (a*math.cos(i))/Rs
-    impact = 0.0
+    #impact = 0.0
 
     total_per.append(period)
     total_rprs.append(rprs)
