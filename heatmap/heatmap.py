@@ -391,7 +391,7 @@ def plot(recovered_period, recovered_rprs, total_per, total_rprs, targetname):
     plt.show()
 
 
-path_to_list = '/Users/sheilasagear/Dropbox/K2/K2_fits/heatmap_fits.txt'
+path_to_list = '/Users/sheilasagear/moving_dropbox_stuff_here_temp/K2/K2_fits/heatmap_fits.txt'
 
 fitslist = open(path_to_list)
 
