@@ -1,3 +1,9 @@
+"""
+
+THIS IS AN OLD VERSION -- NOT THE ONE CURRENTLY ON THE SCC
+
+"""
+
 from __future__ import division
 
 import numpy as np

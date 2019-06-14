@@ -16,6 +16,10 @@ import matplotlib.pyplot as plt
 
 import matplotlib
 
+import PyAstronomy
+
+from PyAstronomy import pyasl
+
 ########################################
 #time and flux arrays must be np arrays
 ########################################
@@ -106,7 +110,6 @@ def createT(time, T0):#time array, transit mid-time, impact parameter
 
     i = randomInc(1)
     impact = (a*math.cos(i))/Rs
-    #impact = 0.0
 
     total_per.append(period)
     total_rprs.append(rprs)
@@ -290,9 +293,43 @@ def inject(time, flux, tmod, T0):
     isrec = is_recovered(period, fitper, rprs, fitrprs)
     print(isrec)
 
-    return(isrec)
+    return(isrec, results, mergedfluxD)
 
+def plot_bls(time, period, rprs, impact, T0, results, mergedfluxD, isrec):
 
+    nbins=300
+
+    phases = PyAstronomy.pyasl.foldAt(time, period, T0=T0+period)
+
+    sortIndi = np.argsort(phases)
+    phases = phases[sortIndi]
+    mergedfluxD = mergedfluxD[sortIndi]
+
+    mergedfluxD_1 = mergedfluxD[len(mergedfluxD)//2:]
+    mergedfluxD_2 = mergedfluxD[:len(mergedfluxD)//2]
+    mergedfluxD = np.concatenate((mergedfluxD_1, mergedfluxD_2))
+
+    phase = np.linspace(0.0, 1.0, 300)
+
+    high = results[3]*results[4]
+    low = high - results[3]
+
+    fit = np.zeros(300) + high # H
+    tlen = (results[6]+1)-results[5]
+    htlen = tlen//2
+    hdlen = len(fit)//2
+    fit[hdlen-htlen:hdlen+htlen] = low # L
+
+    plt.scatter(phases, mergedfluxD, s=2, color='k')
+    plt.plot(phase, fit, c='r')
+
+    plt.title("Phase folded and binned with BLS fit")
+    plt.xlabel("Phase")
+    plt.ylabel("Normalized Flux")
+
+    plt.savefig('/Users/sheilasagear/Dropbox/jupiter_sized_bls_fit/rprs' + str(rprs) + 'period' + str(period) + 'im' + str(impact) + 'isrec' + str(isrec) + '.png' )
+
+    plt.cla()
 
 def plot(recovered_period, recovered_rprs, total_per, total_rprs, targetname):
 
@@ -324,7 +361,7 @@ def plot(recovered_period, recovered_rprs, total_per, total_rprs, targetname):
 
     print(counts1T)
 
-    with open("/Users/sheilasagear/Dropbox/K2/heatmap_inclination_csv/heatmaps_inprogress/inclination/heatmap" + str(targetname) + "scctesting.csv", "w") as heatmap_csv:
+    with open("/Users/sheilasagear/Dropbox/K2/heatmap_inclination_csv/heatmaps_inprogress/inclination/heatmap" + str(targetname) + "jupiter_test.csv", "w") as heatmap_csv:
         np.savetxt(heatmap_csv, counts1T, fmt='%f', delimiter=',')
 
     matplotlib.rcParams['xtick.minor.size'] = 0
@@ -350,7 +387,7 @@ def plot(recovered_period, recovered_rprs, total_per, total_rprs, targetname):
     cbar.set_label('Fraction recovered', rotation=270, labelpad=13)
 
 
-    plt.savefig('/Users/sheilasagear/Dropbox/ssagear_k2/plots/in_progress/heatmaps_inprogress/inclination/heatmap_' + str(targetname) + 'scctesting.png')
+    plt.savefig('/Users/sheilasagear/Dropbox/ssagear_k2/plots/in_progress/heatmaps_inprogress/inclination/heatmap_' + str(targetname) + 'jupiter_test.png')
     plt.show()
 
 
@@ -378,7 +415,7 @@ for f in range(filecount):
     total_per = []
     total_rprs = []
 
-    for i in range(100):#however many planets you want to try
+    for i in range(10000):#however many planets you want to try
         print(i)
 
         time, flux, name, cnum, QCDPP, tmod, period, rprs, impact, T0 = create_params(path)
@@ -396,6 +433,10 @@ for f in range(filecount):
 
             continue
 
-        isrec = inject(time, flux, tmod, T0)
+        isrec, results, mergedfluxD = inject(time, flux, tmod, T0)
+
+        if rprs > 0.6:
+            plot_bls(time, period, rprs, impact, T0, results, mergedfluxD, isrec)
+
 
     plot(recovered_period, recovered_rprs, total_per, total_rprs, name)
