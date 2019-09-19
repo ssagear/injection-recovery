@@ -10,19 +10,19 @@ def find_nearest(array,value):
     return array[idx]
 
 a = np.arange(26)
-ybins = [x / 20. for x in range(8)]
+ybins = [x / 20. for x in range(21)]
 count = 0
 
 natural_val = np.linspace(0, 1.415, num=8, endpoint=True)
 natural_val = natural_val.round(decimals=2)
 per_segments = [10**x for x in natural_val]
 per_segments = [i.round(decimals=2) for i in per_segments]
-rprs_segments = [x / 20 for x in range(8)]
+rprs_segments = [x / 20 for x in range(21)]
 
 block_percent = [[0 for i in range(len(per_segments))] for j in range(len(rprs_segments))]
 
 
-with open('/Users/sheilasagear/Dropbox/K2/surfacetest/pnull/block_percent/pnull_blockpercent.csv') as csvfile:
+with open('/Users/sheilasagear/Dropbox/merged_force_depth_within_25percent.csv') as csvfile:
     reader = csv.reader(csvfile)
     block_lst = list(reader)
     for i in range(len(block_lst)):
@@ -38,8 +38,8 @@ block_percent = np.asarray(block_percent)
 block_percent = np.flip(block_percent, axis=0)
 
 eta = np.linspace(0, 1, 100000)
-n_stars = 500
-p_target = .05
+n_stars = 374
+p_target = .01
 
 
 p = [[0 for i in range(len(per_segments))] for j in range(len(rprs_segments))]
@@ -65,6 +65,7 @@ eta_p = np.asarray(eta_p)
 print(np.mean(eta_p))
 print(eta_p)
 
+np.savetxt('/Users/sheilasagear/Dropbox/merged_force_depth_within_25percent_pnull_1percent.csv', eta_p, fmt='%f', delimiter=',')
 
 matplotlib.rcParams['xtick.minor.size'] = 0
 matplotlib.rcParams['xtick.minor.width'] = 0
@@ -79,13 +80,13 @@ ax.xaxis.set_ticklabels(per_segments)
 ax.yaxis.set_ticks(ybins)
 ax.yaxis.set_ticklabels(ybins)
 
-ax.set_title('Upper Limit of $\eta$, $P_{null}$ = 0.05')
+ax.set_title('Upper Limit of $\eta$, $P_{null}$ = 0.01')
 ax.set_xlabel('Period (days)')
 ax.set_ylabel('Radius (stellar radii)')
 
 
 cbar = plt.colorbar(heatmap)
-heatmap.set_clim(0.3, 1)
+heatmap.set_clim(0.11, 1)
 cbar.set_label('$\eta$', rotation=270, labelpad=13)
 
 #this is modified from https://stackoverflow.com/questions/25071968/heatmap-with-text-in-each-cell-with-matplotlibs-pyplot
@@ -103,6 +104,6 @@ def show_values(fig, ax, pc, fmt="%.2f", **kw):
 
 show_values(fig, ax, heatmap)
 
-plt.savefig('/Users/sheilasagear/Dropbox/ssagear_k2/plots/pnull_5percent.png', dpi = 400)
+plt.savefig('/Users/sheilasagear/Dropbox/K2/pnull_1percent_forcedepth25percentdepth_18sep.png', dpi = 400)
 
 plt.show()

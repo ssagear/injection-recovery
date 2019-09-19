@@ -12,7 +12,7 @@ def find_nearest(array,value):
     return array[idx]
 
 
-deff_1 = 0.11716
+deff_1 = 0.044248
 #deff_1 = .90
 #deff_2 = 1
 #deff_3 = 1
